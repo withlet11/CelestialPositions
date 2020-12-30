@@ -1,0 +1,25 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+    <style name="forHighAltitude">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#ffc0c0</item>
+    </style>
+    <style name="forMiddleAltitude">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">#ffc0c0</item>
+    </style>
+    <style name="forLowAltitude">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">#c0a0a0</item>
+    </style>
+    <style name="forUnderHorizon">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">#a0a0a0</item>
+    </style>
+</resources>

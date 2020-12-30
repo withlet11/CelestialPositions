@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="localTimeLabel">"Helyi idő: "</string>
+    <string name="utcLabel">"Világ idő: "</string>
+    <string name="altitude">Mag.</string>
+    <string name="azimuth">Azmt.</string>
+    <string name="commonName">neve</string>
+    <string name="hourAngle">Óra Sz.</string>
+    <string name="declination">Dek.</string>
+    <string name="longitude">Hosszúság: </string>
+    <string name="latitude">Szélesség: </string>
+    <string name="messier_objects">Messier Objektumok</string>
+    <string name="stars">Csillagok</string>
+    <string name="inGettingLocation">A helyadatok megszerzésében…</string>
+    <string name="pleaseCheckIfGPSIsOn">Ellenőrizze, hogy be van-e kapcsolva a GPS.</string>
+    <string name="checkAppLvlPermission">Kérjük, ellenőrizze a %s alkalmazás szintű engedélyeket a hozzáféréshez.</string>
+    <string name="locationSettings">Megfigyelési hely beállítása</string>
+    <string name="license">Licenc (angolul)</string>
+    <string name="opensource_licenses">Nyílt forráskódú licencek</string>
+    <string name="open_cluster">NY</string>
+    <string name="globular_cluster">GH</string>
+    <string name="diffuse_nebula">DF</string>
+    <string name="planetary_nebula">PL</string>
+    <string name="supernova_remnant">SM</string>
+    <string name="galaxy">GX</string>
+    <string name="modify">módosítás</string>
+</resources>
