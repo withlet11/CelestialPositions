@@ -1,7 +1,7 @@
 /**
  * MainActivity.kt
  *
- * Copyright 2020 Yasuhiro Yamakawa <withlet11@gmail.com>
+ * Copyright 2020-2021 Yasuhiro Yamakawa <withlet11@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -25,6 +25,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
@@ -39,7 +40,10 @@ import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
-    // private var time: AstronomicalTimes
+    companion object {
+        const val UPDATE_INTERVAL = 1000L
+    }
+
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
     private val tabAdapter = AstronomicalListTabAdapter(this)
@@ -145,17 +149,17 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
 
         val timer = Timer()
-        val guiUpdater = Handler()
+        // val guiUpdater = Handler()
 
         timer.schedule(object : TimerTask() {
             override fun run() {
                 val time = AstronomicalTimes(ZonedDateTime.now())
-                guiUpdater.post {
+                Handler(Looper.getMainLooper()).post {
                     updateTimeValues(time)
                     tabAdapter.updateTable(time)
                 }
             }
-        }, 1000, 1000)
+        }, UPDATE_INTERVAL, UPDATE_INTERVAL)
     }
 
     private fun updateTimeValues(time: AstronomicalTimes) {
