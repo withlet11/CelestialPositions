@@ -23,6 +23,7 @@ package io.github.withlet11.celestialpositions
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -74,7 +75,7 @@ class DetailsFragment : Fragment() {
 
         updateValues()
 
-        val guiUpdater = Handler()
+        val guiUpdater = Handler(Looper.getMainLooper())
 
         timer = timer ?: Timer()
         timer?.schedule(object : TimerTask() {
