@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">Celestial Positions</string>
     <string name="localTimeLabel">"Local Time: "</string>
     <string name="utcLabel">"UTC: "</string>
@@ -20,7 +20,7 @@
     <string name="longitudeHint" translatable="false">+123.456</string>
     <string name="checkAppLvlPermission">Please check the app-level permissions to access from %s</string>
     <string name="unsignedThreeDigit" translatable="false">%3d°</string>
-    <string name="app_license" translatable="false">Copyright 2020-2021 Yasuhiro Yamakawa &lt;withlet11@gmail.com&gt;\n\n
+    <string name="app_license" translatable="false" tools:ignore="Typos">Copyright 2020-2021 Yasuhiro Yamakawa &lt;withlet11@gmail.com&gt;\n\n
         Permission is hereby granted, free of charge, to any person obtaining a copy of this
         software and associated documentation files (the "Software"), to deal in the Software
         without restriction, including without limitation the rights to use, copy, modify, merge,

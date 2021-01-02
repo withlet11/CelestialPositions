@@ -110,7 +110,7 @@ class DetailsFragment : Fragment() {
         var latitude: Double = 0.0
 
         var longitude: Double = 0.0
-            set(value: Double) {
+            set(value) {
                 field = value
                 difference = Duration.ofMillis((longitude / 360 * 24 * 60 * 60 * 1000).toLong())
             }

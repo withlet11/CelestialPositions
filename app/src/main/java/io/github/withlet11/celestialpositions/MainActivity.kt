@@ -26,10 +26,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.DialogFragment
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.tabs.TabLayout
@@ -39,7 +39,7 @@ import java.time.ZonedDateTime
 import java.util.*
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), LocationSettingFragment.LocationSettingDialogListener {
     companion object {
         const val UPDATE_INTERVAL = 1000L
     }
@@ -56,6 +56,27 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
+        val toolbar: Toolbar = findViewById(R.id.my_toolbar)
+        toolbar.setTitle(R.string.app_name)
+        toolbar.setLogo(R.drawable.ic_launcher_foreground)
+        toolbar.inflateMenu(R.menu.menu_main)
+
+        toolbar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.item_settings -> {
+                    val dialog = LocationSettingFragment()
+                    dialog.show(supportFragmentManager, "locationSetting")
+                }
+                R.id.item_licenses -> {
+                    startActivity(Intent(application, LicenseActivity::class.java))
+                }
+                R.id.item_credits -> {
+                    startActivity(Intent(this, OssLicensesMenuActivity::class.java))
+                }
+            }
+            true
+        }
+
         localTimeField = findViewById(R.id.textview_localtime)
         utcField = findViewById(R.id.textview_utc)
         latitudeField = findViewById(R.id.textview_latitude)
@@ -74,64 +95,22 @@ class MainActivity : AppCompatActivity() {
         loadPreviousPosition()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        // check if the request code is same as what is passed  here it is 2
-        if (requestCode == 2 && data != null) {
-            try {
-                latitude = data.getDoubleExtra("LATITUDE", 0.0)
-                longitude = data.getDoubleExtra("LONGITUDE", 0.0)
-            } catch (e: ClassCastException) {
-                latitude = 0.0
-                longitude = 0.0
-            } finally {
-                tabAdapter.latitude = latitude
-                tabAdapter.longitude = longitude
-            }
-
-            with(getSharedPreferences("observation_position", Context.MODE_PRIVATE).edit()) {
-                putFloat("latitude", latitude.toFloat())
-                putFloat("longitude", longitude.toFloat())
-                commit()
-            }
-
-            updateObservationPosition()
-        }
+    override fun onDialogPositiveClick(dialog: DialogFragment) {
+        loadPreviousPosition()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.item_settings -> {
-                val intent = Intent(application, LocationSettingActivity::class.java)
-                intent.putExtra("LATITUDE", latitude)
-                intent.putExtra("LONGITUDE", longitude)
-                startActivityForResult(intent, 2)
-            }
-            R.id.item_licenses -> {
-                startActivity(Intent(application, LicenseActivity::class.java))
-            }
-            R.id.item_credits -> {
-                startActivity(Intent(this, OssLicensesMenuActivity::class.java))
-            }
-            android.R.id.home -> finish()
-        }
-        return true
+    override fun onDialogNegativeClick(dialog: DialogFragment) {
+        // Do nothing
     }
 
     private fun loadPreviousPosition() {
         val previous = getSharedPreferences("observation_position", Context.MODE_PRIVATE)
 
         try {
-            latitude = previous.getFloat("latitude", 0.0F).toDouble()
-            longitude = previous.getFloat("longitude", 0.0F).toDouble()
+            latitude = previous.getFloat("latitude", 0f).toDouble()
+            longitude = previous.getFloat("longitude", 0f).toDouble()
         } catch (e: ClassCastException) {
             latitude = 0.0
-            longitude = 0.0
         } finally {
             tabAdapter.latitude = latitude
             tabAdapter.longitude = longitude
