@@ -22,6 +22,10 @@
         </activity>
         <activity android:name="io.github.withlet11.celestialpositions.DetailsActivity" />
         <activity android:name="io.github.withlet11.celestialpositions.LicenseActivity" />
+
+        <service
+            android:name=".MainActivity"
+            android:foregroundServiceType="location" />
     </application>
 
 </manifest>
