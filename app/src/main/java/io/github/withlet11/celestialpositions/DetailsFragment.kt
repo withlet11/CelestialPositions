@@ -69,8 +69,8 @@ class DetailsFragment : Fragment() {
         updateValues()
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        // super.onStart()
         super.onResume()
 
         updateValues()
