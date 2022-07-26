@@ -51,7 +51,7 @@ class MessierObject(
 
     private fun getTypeAbbr(): String =
         typeList.mapNotNull {
-            if (type.toLowerCase(Locale.getDefault()).indexOf(it.name) >= 0) it.abbr else null
+            if (type.lowercase(Locale.getDefault()).indexOf(it.name) >= 0) it.abbr else null
         }.distinct().joinToString()
 
     companion object {

@@ -28,6 +28,7 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.LocationManager
 import android.os.Bundle
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.DigitsKeyListener
@@ -72,8 +73,8 @@ class LocationSettingFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(activity!!)
-        val inflater = activity!!.layoutInflater
+        val builder = AlertDialog.Builder(requireActivity())
+        val inflater = requireActivity().layoutInflater
         val locationSettingView = inflater.inflate(R.layout.fragment_location_setting, null)
         builder.setView(locationSettingView)
             .setTitle(R.string.locationSettings)
@@ -102,11 +103,11 @@ class LocationSettingFragment : DialogFragment() {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
         locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult?) {
-                val location = locationResult?.lastLocation ?: return
+            override fun onLocationResult(locationResult: LocationResult) {
+                val location = locationResult.lastLocation
 
-                latitude = location.latitude
-                longitude = location.longitude
+                latitude = location?.latitude
+                longitude = location?.longitude
                 latitudeField.text = "%+f".format(latitude)
                 longitudeField.text = "%+f".format(longitude)
                 unlockViewItems()
@@ -169,7 +170,7 @@ class LocationSettingFragment : DialogFragment() {
             })
         }
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(context!!)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
         getLocationButton = locationSettingView.findViewById<Button>(R.id.getLocationButton).apply {
             setOnClickListener { startGPS() }
@@ -217,7 +218,7 @@ class LocationSettingFragment : DialogFragment() {
                     fusedLocationClient.requestLocationUpdates(
                         locationRequest,
                         locationCallback,
-                        null
+                        Looper.getMainLooper()
                     )
                 } else {
                     unlockViewItems()
