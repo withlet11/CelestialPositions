@@ -97,10 +97,10 @@ class LocationSettingFragment : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        locationRequest = LocationRequest().apply {
+        locationRequest = LocationRequest.create().apply {
             interval = MAXIMUM_UPDATE_INTERVAL
             fastestInterval = MINIMUM_UPDATE_INTERVAL
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            priority = Priority.PRIORITY_HIGH_ACCURACY
         }
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
