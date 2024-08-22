@@ -28,7 +28,7 @@ class MessierObjectList : AstronomicalObjectList("messier_objects.csv") {
                 MessierObject(
                     messier = line[0],
                     ngc = line[1],
-                    common_name = line[2],
+                    commonName = line[2],
                     picture = line[3],
                     type = line[4],
                     distance = line[5],

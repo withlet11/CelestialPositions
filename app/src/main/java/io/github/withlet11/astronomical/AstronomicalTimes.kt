@@ -53,8 +53,8 @@ class AstronomicalTimes(time: ZonedDateTime?) {
                 1721088.5 +
                 elapsedSeconds.seconds / 86400.0
 
-    val tjd
-        get() = jd - 2439999.5
+//    val tjd
+//        get() = jd - 2439999.5
 
     // Julian centuries at UT1=0
     private val jcAt0: Double = let {

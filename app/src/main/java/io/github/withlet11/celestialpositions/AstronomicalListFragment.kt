@@ -103,8 +103,8 @@ abstract class AstronomicalListFragment : Fragment() {
     }
 
     private fun setValuesToCells(item: AstronomicalObject, row: LinearLayout) {
-        val nameField = row.findViewById(R.id.textview_name) as TextView
-        val declinationField = row.findViewById(R.id.textview_declination) as TextView
+        val nameField: TextView = row.findViewById(R.id.textview_name)
+        val declinationField: TextView = row.findViewById(R.id.textview_declination)
 
         nameField.text = item.name
         declinationField.text = item.dec.substring(0, 7)
@@ -150,9 +150,9 @@ abstract class AstronomicalListFragment : Fragment() {
     ) {
         val difference = Duration.ofMillis((longitude / 360 * 24 * 60 * 60 * 1000).toLong())
         val (altitude, azimuth) = position.horizontal(time.gmst + difference, latitude)
-        val altitudeField = row.findViewById(R.id.textview_altitude) as TextView
-        val azimuthField = row.findViewById(R.id.textview_azimuth) as TextView
-        val hourAngleField = row.findViewById(R.id.textview_hourangle) as TextView
+        val altitudeField: TextView = row.findViewById(R.id.textview_altitude)
+        val azimuthField: TextView = row.findViewById(R.id.textview_azimuth)
+        val hourAngleField: TextView = row.findViewById(R.id.textview_hourangle)
         altitudeField.text = signedThreeDigit.format(round(altitude).toInt())
         azimuthField.text = unsignedThreeDigit.format(round(azimuth).toInt())
         hourAngleField.text = position.hourAngleStr(time.gmst + difference).substring(0, 7)

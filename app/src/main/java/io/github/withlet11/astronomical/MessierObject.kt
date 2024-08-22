@@ -28,7 +28,7 @@ data class NameAndAbbr(val name: String, val abbr: String)
 class MessierObject(
     val messier: String, // M97
     val ngc: String, // NGC 3587
-    val common_name: String, //Owl Nebula
+    val commonName: String, //Owl Nebula
     val picture: String, // M97-stargazer-obs.jpg
     val type: String, // Planetary nebula
     val distance: String, // 2.03
@@ -42,7 +42,7 @@ class MessierObject(
     override val details: String
         get() = StringBuffer().apply {
             append(if (ngc == "–") "NGC: –" else ngc)
-            append("\nCommon name: %s\n".format(common_name))
+            append("\nCommon name: %s\n".format(commonName))
             append("Type: %s\n".format(type))
             append("Distance (ly): %s\n".format(distance))
             append("Constellation: %s\n".format(constellation))
