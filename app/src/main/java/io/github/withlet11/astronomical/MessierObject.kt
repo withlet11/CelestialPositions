@@ -29,7 +29,7 @@ class MessierObject(
     val messier: String, // M97
     val ngc: String, // NGC 3587
     val commonName: String, //Owl Nebula
-    val picture: String, // M97-stargazer-obs.jpg
+    @Suppress("unused") val picture: String, // M97-stargazer-obs.jpg
     val type: String, // Planetary nebula
     val distance: String, // 2.03
     val constellation: String, // Ursa Major
