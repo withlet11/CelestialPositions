@@ -1,7 +1,7 @@
 /**
  * DetailsFragment.kt
  *
- * Copyright 2020 Yasuhiro Yamakawa <withlet11@gmail.com>
+ * Copyright 2025 Yasuhiro Yamakawa <withlet11@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -22,87 +22,141 @@
 package io.github.withlet11.celestialpositions
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.requiredWidthIn
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import io.github.withlet11.astronomical.AstronomicalTimes
 import io.github.withlet11.astronomical.SphericalCoordinate
 import java.time.Duration
 import java.time.ZonedDateTime
-import java.util.*
 import kotlin.math.round
+import kotlinx.coroutines.delay
 
 class DetailsFragment : Fragment() {
-    private var position: SphericalCoordinate = SphericalCoordinate(Duration.ZERO, 0.0)
-    private var timer: Timer? = null
+    private lateinit var hourAngleField: String
+    private lateinit var altitudeField: String
+    private lateinit var azimuthField: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_details, container, false)
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        // get arguments
+    ): View {
         val args = arguments
         val name = args?.getString("NAME") ?: ""
         val milliSecRa = args?.getLong("RIGHT_ASCENSION") ?: 0
         val declination = args?.getDouble("DECLINATION") ?: 0.0
-        position = SphericalCoordinate(Duration.ofMillis(milliSecRa), declination)
+        val position = SphericalCoordinate(Duration.ofMillis(milliSecRa), declination)
         val details = args?.getString("DETAILS") ?: ""
 
-        // get gui part IDs
-        val nameField = view.findViewById<TextView>(R.id.textview_name)
-        val declinationField = view.findViewById<TextView>(R.id.textview_declination)
-        val detailsField = view.findViewById<TextView>(R.id.textview_details)
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                MaterialTheme(colorScheme = darkColorScheme()) {
+                    var time by remember {
+                        mutableStateOf(AstronomicalTimes(ZonedDateTime.now()))
+                    }
+                    updateValues(position, time)
+                    LaunchedEffect(Unit) {
+                        while (true) {
+                            delay(1000)
+                            val now = AstronomicalTimes(ZonedDateTime.now())
+                            updateValues(position, now)
+                            time = now
+                        }
+                    }
 
-        // set values
-        nameField.text = name
-        declinationField.text = SphericalCoordinate.formatDMS(declination).subSequence(0, 7)
-        detailsField.text = details
-        updateValues()
-    }
-
-    override fun onResume() {
-        // super.onStart()
-        super.onResume()
-
-        updateValues()
-
-        val guiUpdater = Handler(Looper.getMainLooper())
-
-        timer = timer ?: Timer()
-        timer?.schedule(object : TimerTask() {
-            override fun run() {
-                guiUpdater.post { updateValues() }
+                    Surface {
+                        Column(modifier = Modifier.requiredWidthIn()) {
+                            Text(
+                                style = MaterialTheme.typography.titleLarge,
+                                text = name
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    text = getString(R.string.declination)
+                                )
+                                Text(
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    text = SphericalCoordinate.formatDMS(declination)
+                                        .subSequence(0, 7)
+                                        .toString()
+                                )
+                                Text(
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    text = getString(R.string.hourAngle)
+                                )
+                                Text(
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    text = hourAngleField
+                                )
+                            }
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    text = getString(R.string.altitude)
+                                )
+                                Text(
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    text = altitudeField
+                                )
+                                Text(
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    text = getString(R.string.azimuth)
+                                )
+                                Text(
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    text = azimuthField
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(12.dp))
+                            Text(
+                                style = MaterialTheme.typography.bodyLarge,
+                                text = details
+                            )
+                        }
+                    }
+                }
             }
-        }, 1000, 1000)
+        }
     }
 
-    override fun onPause() {
-        super.onPause()
-        timer?.cancel()
-        timer = null
-    }
-
-    fun updateValues() {
+    private fun updateValues(position: SphericalCoordinate, time: AstronomicalTimes) {
         if (isVisible) {
             view?.apply {
-                val hourAngleField = findViewById<TextView>(R.id.textview_hourangle)
-                val altitudeField = findViewById<TextView>(R.id.textview_altitude)
-                val azimuthField = findViewById<TextView>(R.id.textview_azimuth)
-
-                val time = AstronomicalTimes(ZonedDateTime.now())
-                hourAngleField.text = position.hourAngleStr(time.gmst + difference).substring(0, 7)
+                hourAngleField = position.hourAngleStr(time.gmst + difference).substring(0, 7)
                 val (altitude, azimuth) = position.horizontal(time.gmst + difference, latitude)
-                altitudeField.text = SIGNED_THREE_DIGIT.format(round(altitude).toInt())
-                azimuthField.text = UNSIGNED_THREE_DIGIT.format(round(azimuth).toInt())
+                altitudeField = SIGNED_THREE_DIGIT.format(round(altitude).toInt())
+                azimuthField = UNSIGNED_THREE_DIGIT.format(round(azimuth).toInt())
             }
         }
     }
@@ -119,6 +173,5 @@ class DetailsFragment : Fragment() {
         private var difference = Duration.ofMillis((longitude / 360 * 24 * 60 * 60 * 1000).toLong())
         const val UNSIGNED_THREE_DIGIT: String = "%3d°"
         const val SIGNED_THREE_DIGIT: String = "%+3d°"
-
     }
 }
