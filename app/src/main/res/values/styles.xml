@@ -1,10 +1,13 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="AppTheme" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorSecondary">@color/colorPrimarySurface</item>
+        <item name="colorPrimarySurface">@color/colorPrimarySurface</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@color/colorPrimarySurface</item>
     </style>
 
     <!-- Item color in Table -->
@@ -26,11 +29,12 @@
     </style>
 
     <!-- Tool bar color -->
-    <style name="ToolBarTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+    <style name="ToolBarTheme" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimarySurface</item>
+        <item name="colorSecondary">@color/colorPrimary</item>
+        <item name="colorPrimarySurface">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textColorPrimary">@color/colorPrimaryDark</item>
+        <item name="android:textColorPrimary">@color/colorPrimarySurface</item>
         <item name="android:textColorSecondary">@color/colorPlainText</item>
     </style>
 </resources>
