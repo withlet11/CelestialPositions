@@ -72,7 +72,7 @@ fun ObjectListScreen(
         }
     }
 
-    Column {
+    Column(modifier = Modifier.padding(4.dp)) {
         TableHeader(
             time = time,
             latitude = latitude,

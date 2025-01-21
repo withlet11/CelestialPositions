@@ -30,7 +30,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.lifecycleScope
-import io.github.withlet11.astronomical.AstronomicalObject
 import io.github.withlet11.astronomical.MessierObjectList
 import io.github.withlet11.astronomical.StarList
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,12 +38,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
-    private var latitude: Double = 0.0
-    private var longitude: Double = 0.0
-
-    private lateinit var messierList: ArrayList<AstronomicalObject>
-    private lateinit var starList: ArrayList<AstronomicalObject>
-
     private val _licensesStateFlow = MutableStateFlow(OssLicenseList(arrayListOf()))
     private val licensesStateFlow = _licensesStateFlow.asStateFlow()
 
@@ -52,17 +45,16 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-        loadPreviousPosition()
-
-        messierList = MessierObjectList().load(this)
-        starList = StarList().load(this)
+        val location = loadPreviousPosition()
+        val messierList = MessierObjectList().load(this)
+        val starList = StarList().load(this)
 
         createLicenses(this)
 
         setContent {
             MaterialTheme(
                 colorScheme = darkColorScheme(
-                    primary = Color(0xffc0c0ff),
+                    primary = Color(0xffd0d0e0),
                     secondary = Color(0xff8080c0),
                     primaryContainer = Color(0xff000080),
                     secondaryContainer = Color(0xff000040),
@@ -71,8 +63,8 @@ class MainActivity : ComponentActivity() {
                 MainScreen(
                     messierList = messierList,
                     starList = starList,
-                    latitude = latitude,
-                    longitude = longitude,
+                    latitude = location.first,
+                    longitude = location.second,
                     licensesStateFlow = licensesStateFlow
                 )
             }
@@ -80,8 +72,10 @@ class MainActivity : ComponentActivity() {
 
     }
 
-    private fun loadPreviousPosition() {
+    private fun loadPreviousPosition(): Pair<Double, Double> {
         val previous = getSharedPreferences("observation_position", Context.MODE_PRIVATE)
+        var latitude: Double
+        var longitude: Double
 
         try {
             latitude = previous.getFloat("latitude", 0f).toDouble()
@@ -91,6 +85,7 @@ class MainActivity : ComponentActivity() {
             longitude = 0.0
         } finally {
         }
+        return Pair(latitude, longitude)
     }
 
     private fun createLicenses(context: Context) {
