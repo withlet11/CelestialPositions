@@ -1,7 +1,7 @@
 /**
- * MessierObjectFragment.kt
+ * LicenseScreen.kt
  *
- * Copyright 2020 Yasuhiro Yamakawa <withlet11@gmail.com>
+ * Copyright 2025 Yasuhiro Yamakawa <withlet11@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -21,12 +21,29 @@
 
 package io.github.withlet11.celestialpositions
 
-import io.github.withlet11.astronomical.AstronomicalObjectList
-import io.github.withlet11.astronomical.MessierObjectList
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 
 
-class MessierObjectListFragment : AstronomicalListFragment() {
-    override val layout = R.layout.fragment_messier_object_list
-    override val tableView = R.id.table_messier_object_list
-    override fun getList(): AstronomicalObjectList = MessierObjectList()
+@Composable
+fun LicenceScreen() {
+    val scrollState = rememberScrollState()
+
+    Surface(
+        modifier = Modifier.verticalScroll(scrollState)
+            .padding(12.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.app_license),
+            style = MaterialTheme.typography.bodyMedium,
+        )
+    }
 }

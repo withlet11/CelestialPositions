@@ -20,8 +20,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="io.github.withlet11.celestialpositions.DetailsActivity" />
-        <activity android:name="io.github.withlet11.celestialpositions.LicenseActivity" />
 
         <service
             android:name=".MainActivity"

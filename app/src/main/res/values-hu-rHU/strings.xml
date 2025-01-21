@@ -38,4 +38,6 @@
     <string name="supernova_remnant">SM</string>
     <string name="galaxy">GX</string>
     <string name="modify">módosítás</string>
+    <string name="pleaseAuthorizeLocationPermistions">Kérjük, engedélyezze a helymeghatározáshoz való hozzáférést.</string>
+    <string name="approve">Engedélyez</string>
 </resources>

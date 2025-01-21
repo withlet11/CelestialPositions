@@ -28,4 +28,6 @@
     <string name="supernova_remnant">超新</string>
     <string name="galaxy">銀河</string>
     <string name="modify">設定</string>
+    <string name="pleaseAuthorizeLocationPermistions">位置情報へのアクセスを許可してください</string>
+    <string name="approve">許可</string>
 </resources>

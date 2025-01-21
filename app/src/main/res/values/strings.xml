@@ -43,5 +43,8 @@
     <string name="supernova_remnant">SR</string>
     <string name="galaxy">GX</string>
     <string name="modify">modify</string>
+    <string name="pleaseAuthorizeLocationPermistions">Please authorize location permissions</string>
+    <string name="approve">Approve</string>
     <string name="signed_value" translatable="false">%+f</string>
+    <string name="details" translatable="false">Details</string>
 </resources>
