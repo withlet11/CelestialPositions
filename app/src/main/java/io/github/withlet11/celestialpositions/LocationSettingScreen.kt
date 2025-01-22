@@ -271,8 +271,10 @@ fun LocationSettingScreen(
 
             Button(
                 onClick = {
-                    latitude.doubleValue = latitudeString.toDoubleOrNull() ?: 0.0
-                    longitude.doubleValue = longitudeString.toDoubleOrNull() ?: 0.0
+                    latitude.doubleValue =
+                        latitudeString.replace(',', '.').toDoubleOrNull() ?: latitude.doubleValue
+                    longitude.doubleValue =
+                        longitudeString.replace(',', '.').toDoubleOrNull() ?: longitude.doubleValue
 
                     context.getSharedPreferences("observation_position", Context.MODE_PRIVATE)
                         ?.edit()
