@@ -14,6 +14,8 @@
     <string name="messier_objects">Messier Objects</string>
     <string name="stars">Stars</string>
     <string name="inGettingLocation">In getting location information…</string>
+    <string name="locationDataRetrieved">Location data retrieved.</string>
+    <string name="invalidValue">Invalid value</string>
     <string name="pleaseCheckIfGPSIsOn">Please Check if GPS is on.</string>
     <string name="signedThreeDigit" translatable="false">%+3d°</string>
     <string name="latitudeHint" translatable="false">+23.4567</string>
@@ -43,7 +45,7 @@
     <string name="supernova_remnant">SR</string>
     <string name="galaxy">GX</string>
     <string name="modify">modify</string>
-    <string name="pleaseAuthorizeLocationPermistions">Please authorize location permissions</string>
+    <string name="pleaseAuthorizeLocationPermissions">Please authorize location permissions</string>
     <string name="approve">Approve</string>
     <string name="signed_value" translatable="false">%+f</string>
     <string name="details" translatable="false">Details</string>

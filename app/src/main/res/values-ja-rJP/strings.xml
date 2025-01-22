@@ -7,11 +7,13 @@
     <string name="commonName">天体名</string>
     <string name="hourAngle">時角</string>
     <string name="declination">赤緯</string>
-    <string name="longitude">経度</string>
-    <string name="latitude">緯度</string>
+    <string name="longitude">経度：</string>
+    <string name="latitude">緯度：</string>
     <string name="stars">恒星</string>
     <string name="messier_objects">メシエ天体</string>
     <string name="inGettingLocation">位置情報を取得中…</string>
+    <string name="locationDataRetrieved">位置情報を取得しました。</string>
+    <string name="invalidValue">不正な値です。</string>
     <string name="pleaseCheckIfGPSIsOn">GPSがオンかチェックして下さい。</string>
     <string name="checkAppLvlPermission">「アプリの権限」で%sの「位置情報の権限」をオンにして下さい。</string>
     <string name="locationSettings">観測地の設定</string>
@@ -28,6 +30,6 @@
     <string name="supernova_remnant">超新</string>
     <string name="galaxy">銀河</string>
     <string name="modify">設定</string>
-    <string name="pleaseAuthorizeLocationPermistions">位置情報へのアクセスを許可してください</string>
+    <string name="pleaseAuthorizeLocationPermissions">位置情報へのアクセスを許可してください</string>
     <string name="approve">許可</string>
 </resources>

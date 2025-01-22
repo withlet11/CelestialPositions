@@ -11,7 +11,9 @@
     <string name="latitude">Szélesség: </string>
     <string name="messier_objects">Messier Objektumok</string>
     <string name="stars">Csillagok</string>
-    <string name="inGettingLocation">A helyadatok megszerzésében…</string>
+    <string name="inGettingLocation">Helyadatok lekérdezése…</string>
+    <string name="locationDataRetrieved">Helyadatok lekérdezve.</string>
+    <string name="invalidValue">Érvénytelen érték.</string>
     <string name="pleaseCheckIfGPSIsOn">Ellenőrizze, hogy be van-e kapcsolva a GPS.</string>
     <string name="checkAppLvlPermission">Kérjük, ellenőrizze a %s alkalmazás szintű engedélyeket a hozzáféréshez.</string>
     <string name="locationSettings">Megfigyelési hely beállítása</string>
@@ -38,6 +40,6 @@
     <string name="supernova_remnant">SM</string>
     <string name="galaxy">GX</string>
     <string name="modify">módosítás</string>
-    <string name="pleaseAuthorizeLocationPermistions">Kérjük, engedélyezze a helymeghatározáshoz való hozzáférést.</string>
+    <string name="pleaseAuthorizeLocationPermissions">Kérjük, engedélyezze a helymeghatározáshoz való hozzáférést.</string>
     <string name="approve">Engedélyez</string>
 </resources>
