@@ -63,8 +63,8 @@ class MainActivity : ComponentActivity() {
                 MainScreen(
                     messierList = messierList,
                     starList = starList,
-                    latitude = location.first,
-                    longitude = location.second,
+                    initialLatitude = location.first,
+                    initLongitude = location.second,
                     licensesStateFlow = licensesStateFlow
                 )
             }
@@ -96,103 +96,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-/*
-override fun onCreate(savedInstanceState: Bundle?) {
-    enableEdgeToEdge()
-    super.onCreate(savedInstanceState)
-
-    setContentView(R.layout.activity_main)
-    val toolbar: Toolbar = findViewById(R.id.my_toolbar)
-    toolbar.setTitle(R.string.app_name)
-    toolbar.setLogo(R.drawable.ic_launcher_foreground)
-    toolbar.inflateMenu(R.menu.menu_main)
-
-    toolbar.setOnMenuItemClickListener { item ->
-        when (item.itemId) {
-            R.id.item_settings -> {
-                val dialog = LocationSettingFragment()
-                dialog.show(supportFragmentManager, "locationSetting")
-            }
-            R.id.item_licenses -> {
-                startActivity(Intent(application, LicenseActivity::class.java))
-            }
-            R.id.item_credits -> {
-                startActivity(Intent(this, OssLicensesMenuActivity::class.java))
-            }
-        }
-        true
-    }
-
-    localTimeField = findViewById(R.id.textview_localtime)
-    utcField = findViewById(R.id.textview_utc)
-    latitudeField = findViewById(R.id.textview_latitude)
-    longitudeField = findViewById(R.id.textview_longitude)
-
-    val pager = findViewById<ViewPager2>(R.id.pager)
-    pager.adapter = tabAdapter
-
-    val tabLayout = findViewById<TabLayout>(R.id.tab_layout)
-    TabLayoutMediator(tabLayout, pager) { tab, position ->
-        tab.setText(arrayOf(R.string.messier_objects, R.string.stars)[position])
-    }.attach()
-
-    supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-    loadPreviousPosition()
-}
-
-override fun onDialogPositiveClick(dialog: DialogFragment) {
-    loadPreviousPosition()
-}
-
-override fun onDialogNegativeClick(dialog: DialogFragment) {
-    // Do nothing
-}
-
-private fun loadPreviousPosition() {
-    val previous = getSharedPreferences("observation_position", Context.MODE_PRIVATE)
-
-    try {
-        latitude = previous.getFloat("latitude", 0f).toDouble()
-        longitude = previous.getFloat("longitude", 0f).toDouble()
-    } catch (e: ClassCastException) {
-        latitude = 0.0
-    } finally {
-        tabAdapter.latitude = latitude
-        tabAdapter.longitude = longitude
-    }
-
-    updateObservationPosition()
-}
-
-private fun updateObservationPosition() {
-    latitudeField.text = "%+f".format(latitude)
-    longitudeField.text = "%+f".format(longitude)
-}
-
-override fun onStart() {
-    super.onStart()
-
-    val timer = Timer()
-    // val guiUpdater = Handler()
-
-    timer.schedule(object : TimerTask() {
-        override fun run() {
-            val time = AstronomicalTimes(ZonedDateTime.now())
-            Handler(Looper.getMainLooper()).post {
-                updateTimeValues(time)
-                tabAdapter.updateTable(time)
-            }
-        }
-    }, UPDATE_INTERVAL, UPDATE_INTERVAL)
-}
-
-private fun updateTimeValues(time: AstronomicalTimes) {
-    localTimeField.text = time.localTime.toString().substring(11, 19)
-    utcField.text = time.utc.toString().substring(11, 19)
-}
-}
-
-
- */

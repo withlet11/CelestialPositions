@@ -45,7 +45,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import io.github.withlet11.astronomical.*
 import kotlinx.coroutines.delay
 import java.time.Duration
@@ -57,7 +56,6 @@ data class TableValues(val name: String, val position: SphericalCoordinate, val 
 
 @Composable
 fun AstronomicalObjectTable(
-    navController: NavHostController,
     list: ArrayList<AstronomicalObject>,
     latitude: Double,
     longitude: Double,
@@ -71,7 +69,6 @@ fun AstronomicalObjectTable(
             val position = SphericalCoordinate.makePosition(item.ra, item.dec)
             tableValueList.add(TableValues(item.name, position, item.details))
             ObjectDataRow(
-                navController,
                 name = item.name,
                 declinationFieldText = item.dec.substring(0, 7),
                 tableValueList = tableValueList,
@@ -86,7 +83,6 @@ fun AstronomicalObjectTable(
 
 @Composable
 fun ObjectDataRow(
-    navController: NavHostController,
     name: String,
     declinationFieldText: String,
     position: SphericalCoordinate,
@@ -168,68 +164,3 @@ fun ObjectDataRow(
         }
     }
 }
-
-/*
-private fun openDetails(
-    navController: NavHostController,
-    name: String,
-    tableValueList: ArrayList<TableValues>,
-) {
-
-    val index = tableValueList.indexOfFirst { it.name == name }
-    navController.navigate(MainNavigation.MessierObjectDetails(index = index))
-
- */
-/*
-val index = tableValueList.indexOfFirst { it.name == name }
-val intent = Intent(context, DetailsActivity::class.java)
-intent.putExtra("INDEX", index)
-intent.putExtra("LATITUDE", latitude)
-intent.putExtra("LONGITUDE", longitude)
-intent.putExtra(
-    "DECLINATION",
-    ArrayList<Double>().apply { tableValueList.forEach { add(it.position.dec) } }
-        .toDoubleArray()
-)
-intent.putExtra(
-    "RIGHT_ASCENSION",
-    ArrayList<Long>().apply { tableValueList.forEach { add(it.position.getMilliSecRa) } }
-        .toLongArray()
-)
-intent.putStringArrayListExtra(
-    "NAME",
-    ArrayList<String>().apply { tableValueList.forEach { add(it.name) } })
-intent.putStringArrayListExtra(
-    "DETAILS",
-    ArrayList<String>().apply { tableValueList.forEach { add(it.details) } })
-context.startActivity(intent)
-
- */
-// }
-// }
-
-/*
-override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-): View? = inflater.inflate(layout, container, false)
-
-
-fun updateTable(time: AstronomicalTimes) {
-    if (isVisible) {
-        val table = view?.findViewById<TableLayout>(tableView)
-        val children = table?.children
-        children?.forEachIndexed { index, row ->
-            (row as? LinearLayout)?.let {
-                updateValues(
-                    time,
-                    it,
-                    tableValueList.elementAt(index).position
-                )
-            }
-        }
-    }
-}
-
- */

@@ -62,6 +62,17 @@ fun ObjectDetailScreen(
     longitude: Double,
     index: Int
 ) {
+    var time by remember {
+        mutableStateOf(AstronomicalTimes(ZonedDateTime.now()))
+    }
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(1000)
+            time = AstronomicalTimes(ZonedDateTime.now())
+        }
+    }
+
     val pagerState =
         rememberPagerState(pageCount = { objectList.size }, initialPage = index)
 
@@ -83,7 +94,8 @@ fun ObjectDetailScreen(
                     milliSecRa = position.getMilliSecRa,
                     declination = position.dec,
                     latitude = latitude,
-                    longitude = longitude
+                    longitude = longitude,
+                    time = time
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 DetailsTextView(objectList[page].details)
@@ -105,19 +117,9 @@ private fun PositionInfo(
     milliSecRa: Long,
     declination: Double,
     latitude: Double,
-    longitude: Double
+    longitude: Double,
+    time: AstronomicalTimes
 ) {
-    var time by remember {
-        mutableStateOf(AstronomicalTimes(ZonedDateTime.now()))
-    }
-
-    LaunchedEffect(Unit) {
-        while (true) {
-            delay(1000)
-            time = AstronomicalTimes(ZonedDateTime.now())
-        }
-    }
-
     val unsignedThreeDigit = "%3d°"
     val signedThreeDigit = "%+3d°"
 

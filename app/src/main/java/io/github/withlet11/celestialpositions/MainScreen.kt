@@ -126,55 +126,57 @@ private fun MainScreenAppBar(
             }
         },
         actions = {
-            IconButton(onClick = { expanded = !expanded }) {
-                Icon(
-                    imageVector = Icons.Filled.MoreVert,
-                    contentDescription = "Localized description"
-                )
-            }
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.locationSettings)) },
-                    leadingIcon = {
-                        Icon(
-                            Icons.Outlined.Place,
-                            contentDescription = null
-                        )
-                    },
-                    onClick = {
-                        navController.navigate(MainNavigation.LocationSettings)
-                        expanded = false
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.license)) },
-                    leadingIcon = {
-                        Icon(
-                            Icons.Outlined.Info,
-                            contentDescription = null
-                        )
-                    },
-                    onClick = {
-                        navController.navigate(MainNavigation.License)
-                        expanded = false
-                    }
-                )
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.opensource_licenses)) },
-                    leadingIcon = {
-                        Icon(
-                            Icons.Outlined.Info,
-                            contentDescription = null
-                        )
-                    },
-                    onClick = {
-                        navController.navigate(MainNavigation.OssLicense)
-                        expanded = false
-                    }
-                )
+            if (!canNavigateBack) {
+                IconButton(onClick = { expanded = !expanded }) {
+                    Icon(
+                        imageVector = Icons.Filled.MoreVert,
+                        contentDescription = "Localized description"
+                    )
+                }
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.locationSettings)) },
+                        leadingIcon = {
+                            Icon(
+                                Icons.Outlined.Place,
+                                contentDescription = null
+                            )
+                        },
+                        onClick = {
+                            navController.navigate(MainNavigation.LocationSettings)
+                            expanded = false
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.license)) },
+                        leadingIcon = {
+                            Icon(
+                                Icons.Outlined.Info,
+                                contentDescription = null
+                            )
+                        },
+                        onClick = {
+                            navController.navigate(MainNavigation.License)
+                            expanded = false
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.opensource_licenses)) },
+                        leadingIcon = {
+                            Icon(
+                                Icons.Outlined.Info,
+                                contentDescription = null
+                            )
+                        },
+                        onClick = {
+                            navController.navigate(MainNavigation.OssLicense)
+                            expanded = false
+                        }
+                    )
+                }
             }
         },
     )
@@ -184,15 +186,15 @@ private fun MainScreenAppBar(
 fun MainScreen(
     messierList: ArrayList<AstronomicalObject>,
     starList: ArrayList<AstronomicalObject>,
-    latitude: Double,
-    longitude: Double,
+    initialLatitude: Double,
+    initLongitude: Double,
     licensesStateFlow: StateFlow<OssLicenseList>,
     navController: NavHostController = rememberNavController(),
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = backStackEntry?.destination
-    var _latitude = remember { mutableDoubleStateOf(latitude) }
-    var _longitude = remember { mutableDoubleStateOf(longitude) }
+    val latitude = remember { mutableDoubleStateOf(initialLatitude) }
+    val longitude = remember { mutableDoubleStateOf(initLongitude) }
 
     Scaffold(
         topBar = {
@@ -214,8 +216,8 @@ fun MainScreen(
                     navController = navController,
                     messierList = messierList,
                     starList = starList,
-                    latitude = _latitude.doubleValue,
-                    longitude = _longitude.doubleValue
+                    latitude = latitude.doubleValue,
+                    longitude = longitude.doubleValue
                 )
             }
             composable<MainNavigation.MessierObjectDetails> { backStackEntry ->
@@ -223,8 +225,8 @@ fun MainScreen(
 
                 ObjectDetailScreen(
                     objectList = messierList,
-                    latitude = _latitude.doubleValue,
-                    longitude = _longitude.doubleValue,
+                    latitude = latitude.doubleValue,
+                    longitude = longitude.doubleValue,
                     index = index
                 )
             }
@@ -233,16 +235,16 @@ fun MainScreen(
 
                 ObjectDetailScreen(
                     objectList = starList,
-                    latitude = _latitude.doubleValue,
-                    longitude = _longitude.doubleValue,
+                    latitude = latitude.doubleValue,
+                    longitude = longitude.doubleValue,
                     index = index
                 )
             }
             composable<MainNavigation.LocationSettings> {
                 LocationSettingScreen(
                     navController = navController,
-                    latitude = _latitude,
-                    longitude = _longitude
+                    latitude = latitude,
+                    longitude = longitude
                 )
             }
             composable<MainNavigation.License> {

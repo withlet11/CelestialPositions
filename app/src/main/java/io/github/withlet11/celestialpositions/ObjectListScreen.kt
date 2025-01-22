@@ -45,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -86,7 +87,6 @@ fun ObjectListScreen(
         ) { page ->
             when (page) {
                 0 -> AstronomicalObjectTable(
-                    navController = navController,
                     list = messierList,
                     latitude = latitude,
                     longitude = longitude,
@@ -97,7 +97,6 @@ fun ObjectListScreen(
                 )
 
                 else -> AstronomicalObjectTable(
-                    navController = navController,
                     list = starList,
                     latitude = latitude,
                     longitude = longitude,
@@ -183,21 +182,27 @@ private fun TableHeader(
     ) {
         Text(
             text = stringResource(R.string.localTimeLabel),
-            fontSize = 14.sp,
-            textAlign = TextAlign.End
+            style = MaterialTheme.typography.labelMedium,
+            textAlign = TextAlign.End,
+            modifier = Modifier.weight(1f)
         )
         Text(
             text = localTimeFieldText,
-            fontSize = 14.sp
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Start,
+            modifier = Modifier.weight(1.2f)
         )
         Text(
             text = stringResource(R.string.latitude),
-            fontSize = 14.sp,
-            textAlign = TextAlign.End
+            style = MaterialTheme.typography.labelMedium,
+            textAlign = TextAlign.End,
+            modifier = Modifier.weight(1f)
         )
         Text(
             text = latitudeFieldText,
-            fontSize = 14.sp
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Start,
+            modifier = Modifier.weight(1.2f)
         )
     }
     Row(
@@ -206,21 +211,27 @@ private fun TableHeader(
     ) {
         Text(
             text = stringResource(R.string.utcLabel),
-            fontSize = 14.sp,
-            textAlign = TextAlign.End
+            style = MaterialTheme.typography.labelMedium,
+            textAlign = TextAlign.End,
+            modifier = Modifier.weight(1f)
         )
         Text(
             text = utcFieldText,
-            fontSize = 14.sp
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Start,
+            modifier = Modifier.weight(1.2f)
         )
         Text(
             text = stringResource(R.string.longitude),
-            fontSize = 14.sp,
-            textAlign = TextAlign.End
+            style = MaterialTheme.typography.labelMedium,
+            textAlign = TextAlign.End,
+            modifier = Modifier.weight(1f)
         )
         Text(
             text = longitudeFieldText,
-            fontSize = 14.sp
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Start,
+            modifier = Modifier.weight(1.2f)
         )
     }
     Row(modifier = Modifier.fillMaxWidth()) {
@@ -257,3 +268,14 @@ private fun TableHeader(
     }
 }
 
+@Preview
+@Composable
+fun TableHeaderPreview() {
+    Column(modifier = Modifier.padding(4.dp)) {
+        TableHeader(
+            time = AstronomicalTimes(ZonedDateTime.now()),
+            latitude = 15.0,
+            longitude = 40.0
+        )
+    }
+}
