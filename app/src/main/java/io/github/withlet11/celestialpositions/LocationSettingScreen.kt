@@ -39,15 +39,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -58,6 +59,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -84,11 +86,19 @@ fun LocationSettingScreen(
     latitude: MutableDoubleState,
     longitude: MutableDoubleState
 ) {
-    var latitudeString by remember { mutableStateOf(latitude.doubleValue.toString()) }
-    var longitudeString by remember { mutableStateOf(longitude.doubleValue.toString()) }
+    var latitudeString by remember { mutableStateOf("%+f".format(latitude.doubleValue)) }
+    var longitudeString by remember { mutableStateOf("%+f".format(longitude.doubleValue)) }
     var statusMessage by remember { mutableStateOf("") }
     var isLocationFieldEnabled by remember { mutableStateOf(true) }
     var isModifyButtonEnabled by remember { mutableStateOf(true) }
+    var isLatitudeFieldValid by remember { mutableStateOf(true) }
+    var isLongitudeFieldValid by remember { mutableStateOf(true) }
+
+    val validValueColor = TextFieldDefaults.colors()
+    val invalidValueColor = TextFieldDefaults.colors(
+        focusedTextColor = Color(0xffff8080),
+        unfocusedTextColor = Color(0xffff8080)
+    )
 
     val context = LocalContext.current
     val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
@@ -167,108 +177,142 @@ fun LocationSettingScreen(
             .setWaitForAccurateLocation(true)
             .build()
 
-    Surface(modifier = Modifier.padding(12.dp)) {
-        Scaffold(snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        }) { contentPadding ->
-            Column(modifier = Modifier.padding(contentPadding)) {
-                TextField(
-                    value = latitudeString,
-                    label = { Text(stringResource(R.string.latitude)) },
-                    enabled = isLocationFieldEnabled,
-                    onValueChange = { latitudeString = it },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier.fillMaxWidth()
-                )
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        modifier = Modifier.padding(12.dp)
+    ) { contentPadding ->
+        Column(modifier = Modifier.padding(contentPadding)) {
+            TextField(
+                value = latitudeString,
+                label = { Text(stringResource(R.string.latitude)) },
+                enabled = isLocationFieldEnabled,
+                colors = if (isLatitudeFieldValid) validValueColor else invalidValueColor,
+                onValueChange = { text ->
+                    var value = text.replace(',', '.').toDoubleOrNull()
+                    value?.let { if (it > 90.0 || it < -90.0) value = null }
+                    isLatitudeFieldValid = value != null
+                    statusMessage =
+                        if (!isLatitudeFieldValid || !isLongitudeFieldValid) context.getString(R.string.invalidValue) else ""
+                    isModifyButtonEnabled = isLatitudeFieldValid && isLongitudeFieldValid
+                    latitudeString = text
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                placeholder = {
+                    Text(text = "%+.4f".format(23.4567), color = Color.Gray)
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
 
-                Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
-                TextField(
-                    value = longitudeString,
-                    label = { Text(stringResource(R.string.longitude)) },
-                    enabled = isLocationFieldEnabled,
-                    onValueChange = { longitudeString = it },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier.fillMaxWidth()
-                )
+            TextField(
+                value = longitudeString,
+                label = { Text(stringResource(R.string.longitude)) },
+                enabled = isLocationFieldEnabled,
+                colors = if (isLongitudeFieldValid) validValueColor else invalidValueColor,
+                onValueChange = { text ->
+                    var value = text.replace(',', '.').toDoubleOrNull()
+                    value?.let { if (it > 90.0 || it < -90.0) value = null }
+                    isLongitudeFieldValid = value != null
+                    statusMessage =
+                        if (!isLatitudeFieldValid || !isLongitudeFieldValid) context.getString(R.string.invalidValue) else ""
+                    isModifyButtonEnabled = isLatitudeFieldValid && isLongitudeFieldValid
+                    longitudeString = text
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                placeholder = {
+                    Text(text = "%+.3f".format(123.456), color = Color.Gray)
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
 
-                Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
-                OutlinedButton(
-                    onClick = {
-                        statusMessage = context.getString(R.string.inGettingLocation)
-                        startGPS(
-                            context = context,
-                            lockViewItems = { isLocationFieldEnabled = false },
-                            unlockViewItems = { isLocationFieldEnabled = true },
-                            fusedLocationClient = fusedLocationClient,
-                            locationRequest = locationRequest,
-                            locationCallback = object : LocationCallback() {
-                                override fun onLocationResult(locationResult: LocationResult) {
-                                    val location = locationResult.lastLocation
+            Text(
+                text = statusMessage,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.fillMaxWidth()
+            )
 
-                                    latitudeString = "%+f".format(location?.latitude ?: 0.0)
-                                    longitudeString = "%+f".format(location?.longitude ?: 0.0)
+            Spacer(modifier = Modifier.height(8.dp))
 
-                                    fusedLocationClient.removeLocationUpdates(this)
-                                }
+            OutlinedButton(
+                onClick = {
+                    statusMessage = context.getString(R.string.inGettingLocation)
+                    startGPS(
+                        context = context,
+                        lockViewItems = { isLocationFieldEnabled = false },
+                        unlockViewItems = { isLocationFieldEnabled = true },
+                        fusedLocationClient = fusedLocationClient,
+                        locationRequest = locationRequest,
+                        locationCallback = object : LocationCallback() {
+                            override fun onLocationResult(locationResult: LocationResult) {
+                                val location = locationResult.lastLocation
 
+                                latitudeString = "%+f".format(location?.latitude ?: 0.0)
+                                longitudeString = "%+f".format(location?.longitude ?: 0.0)
+                                statusMessage = context.getString(R.string.locationDataRetrieved)
+                                isLatitudeFieldValid = true
+                                isLongitudeFieldValid = true
+
+                                fusedLocationClient.removeLocationUpdates(this)
                             }
-                        )
-                    },
-                    enabled = areLocationPermissionsGranted,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(stringResource(R.string.gps))
-                }
 
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Button(
-                    onClick = {
-                        latitude.doubleValue = latitudeString.toDoubleOrNull() ?: 0.0
-                        longitude.doubleValue = longitudeString.toDoubleOrNull() ?: 0.0
-
-                        context.getSharedPreferences("observation_position", Context.MODE_PRIVATE)
-                            ?.edit()
-                            ?.run {
-                                putFloat("latitude", latitude.doubleValue.toFloat())
-                                putFloat("longitude", longitude.doubleValue.toFloat())
-                                commit()
-                            }
-                        navController.popBackStack()
-                    },
-                    enabled = isModifyButtonEnabled,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(stringResource(R.string.modify))
-                }
+                        }
+                    )
+                },
+                enabled = areLocationPermissionsGranted,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(R.string.gps))
             }
-            if (shouldShowPermissionRationale) {
-                LaunchedEffect(Unit) {
-                    scope.launch {
-                        val userAction = snackbarHostState.showSnackbar(
-                            message = context.getString(R.string.pleaseAuthorizeLocationPermistions),
-                            actionLabel = context.getString(R.string.approve),
-                            duration = SnackbarDuration.Indefinite,
-                            withDismissAction = true
-                        )
-                        when (userAction) {
-                            SnackbarResult.ActionPerformed -> {
-                                shouldShowPermissionRationale = false
-                                locationPermissionLauncher.launch(locationPermissions)
-                            }
 
-                            SnackbarResult.Dismissed -> {
-                                shouldShowPermissionRationale = false
-                            }
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(
+                onClick = {
+                    latitude.doubleValue = latitudeString.toDoubleOrNull() ?: 0.0
+                    longitude.doubleValue = longitudeString.toDoubleOrNull() ?: 0.0
+
+                    context.getSharedPreferences("observation_position", Context.MODE_PRIVATE)
+                        ?.edit()
+                        ?.run {
+                            putFloat("latitude", latitude.doubleValue.toFloat())
+                            putFloat("longitude", longitude.doubleValue.toFloat())
+                            commit()
+                        }
+                    navController.popBackStack()
+                },
+                enabled = isModifyButtonEnabled,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(R.string.modify))
+            }
+        }
+        if (shouldShowPermissionRationale) {
+            LaunchedEffect(Unit) {
+                scope.launch {
+                    val userAction = snackbarHostState.showSnackbar(
+                        message = context.getString(R.string.pleaseAuthorizeLocationPermissions),
+                        actionLabel = context.getString(R.string.approve),
+                        duration = SnackbarDuration.Indefinite,
+                        withDismissAction = true
+                    )
+                    when (userAction) {
+                        SnackbarResult.ActionPerformed -> {
+                            shouldShowPermissionRationale = false
+                            locationPermissionLauncher.launch(locationPermissions)
+                        }
+
+                        SnackbarResult.Dismissed -> {
+                            shouldShowPermissionRationale = false
                         }
                     }
                 }
             }
-            if (shouldDirectUserToApplicationSettings) {
-                openApplicationSettings(context)
-            }
+        }
+        if (shouldDirectUserToApplicationSettings) {
+            openApplicationSettings(context)
         }
     }
 }
@@ -331,230 +375,3 @@ private fun startGPS(
 
     unlockViewItems()
 }
-
-/*
-
-
-private fun requestLocationPermission(context: Context, statusMessage: MutableState<String>) {
-    if (ActivityCompat.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
-    ) {
-        statusMessage.value =
-            context.getString(R.string.checkAppLvlPermission)
-                .format(context.getString(R.string.app_name))
-    } else {
-        ActivityCompat.requestPermissions(
-            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-            REQUEST_PERMISSION
-        )
-    }
-}
-}
- */
-/*
-class LocationSettingFragment : DialogFragment() {
-    private var latitude: Double? = 0.0
-    private var longitude: Double? = 0.0
-    private lateinit var latitudeField: TextView
-    private lateinit var longitudeField: TextView
-
-    private lateinit var getLocationButton: Button
-    private lateinit var statusField: TextView
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private lateinit var locationRequest: LocationRequest
-    private lateinit var locationCallback: LocationCallback
-    private lateinit var dialog: AlertDialog
-
-    companion object {
-        private const val MAXIMUM_UPDATE_INTERVAL = 10000L
-        private const val MINIMUM_UPDATE_INTERVAL = 5000L
-        private const val REQUEST_PERMISSION = 1000
-    }
-
-    interface LocationSettingDialogListener {
-        fun onDialogPositiveClick(dialog: DialogFragment)
-        fun onDialogNegativeClick(dialog: DialogFragment)
-    }
-
-    private var listener: LocationSettingDialogListener? = null
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        listener = context as LocationSettingDialogListener
-    }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(requireActivity())
-        val inflater = requireActivity().layoutInflater
-        val locationSettingView = inflater.inflate(R.layout.fragment_location_setting, null)
-        builder.setView(locationSettingView)
-            .setTitle(R.string.locationSettings)
-            .setPositiveButton("Modified") { _, _ ->
-                context?.getSharedPreferences("observation_position", Context.MODE_PRIVATE)?.edit()
-                    ?.run {
-                        putFloat("latitude", latitude?.toFloat() ?: 0f)
-                        putFloat("longitude", longitude?.toFloat() ?: 0f)
-                        commit()
-                    }
-                listener?.onDialogPositiveClick(this)
-            }
-            .setNegativeButton("Cancel") { _, _ -> listener?.onDialogNegativeClick(this) }
-
-        getPreviousValues()
-        prepareGUIComponents(locationSettingView)
-
-        return builder.create().also { dialog = it }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, MAXIMUM_UPDATE_INTERVAL)
-            .setMinUpdateIntervalMillis(MINIMUM_UPDATE_INTERVAL)
-            .setWaitForAccurateLocation(true)
-            .build()
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                val location = locationResult.lastLocation
-
-                latitude = location?.latitude
-                longitude = location?.longitude
-                latitudeField.text = "%+f".format(latitude)
-                longitudeField.text = "%+f".format(longitude)
-                unlockViewItems()
-                statusField.text = ""
-
-                fusedLocationClient.removeLocationUpdates(this)
-            }
-        }
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
-    }
-
-    override fun onDetach() {
-        listener = null
-        super.onDetach()
-    }
-
-    private fun getPreviousValues() {
-        context?.getSharedPreferences("observation_position", Context.MODE_PRIVATE)?.run {
-            latitude = getFloat("latitude", 0f).toDouble()
-            longitude = getFloat("longitude", 0f).toDouble()
-        }
-    }
-
-    private fun prepareGUIComponents(locationSettingView: View) {
-        latitudeField = locationSettingView.findViewById<TextView>(R.id.latitudeField).apply {
-            keyListener = DigitsKeyListener.getInstance("0123456789.,+-")
-            setAutofillHints("%+.4f".format(23.4567))
-            hint = "%+.4f".format(23.4567)
-            text = "%+f".format(latitude)
-            addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-                override fun afterTextChanged(p0: Editable?) {}
-
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    latitude = latitudeField.text.toString().replace(',', '.').toDoubleOrNull()
-                    latitude?.let { if (it > 90.0 || it < -90.0) latitude = null }
-                    latitudeField.setTextColor(if (latitude == null) Color.RED else Color.WHITE)
-                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled =
-                        latitude != null && longitude != null
-                }
-            })
-        }
-
-        longitudeField = locationSettingView.findViewById<TextView>(R.id.longitudeField).apply {
-            keyListener = DigitsKeyListener.getInstance("0123456789.,+-")
-            setAutofillHints("%+.3f".format(123.456))
-            hint = "%+.3f".format(123.456)
-            text = "%+f".format(longitude)
-            addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-                override fun afterTextChanged(p0: Editable?) {}
-
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    longitude = longitudeField.text.toString().replace(',', '.').toDoubleOrNull()
-                    longitude?.let { if (it > 180.0 || it < -180.0) longitude = null }
-                    longitudeField.setTextColor(if (longitude == null) Color.RED else Color.WHITE)
-                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled =
-                        latitude != null && longitude != null
-                }
-            })
-        }
-
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
-
-        getLocationButton = locationSettingView.findViewById<Button>(R.id.getLocationButton).apply {
-            setOnClickListener { startGPS() }
-        }
-
-        statusField = locationSettingView.findViewById(R.id.statusField)
-
-    }
-
-    private fun lockViewItems() {
-        latitudeField.isEnabled = false
-        longitudeField.isEnabled = false
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
-        getLocationButton.isEnabled = false
-    }
-
-    private fun unlockViewItems() {
-        latitudeField.isEnabled = true
-        longitudeField.isEnabled = true
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled =
-            latitude != null && longitude != null
-        getLocationButton.isEnabled = true
-    }
-
-    private fun startGPS() {
-        context?.let { context ->
-            lockViewItems()
-            statusField.text = getString(R.string.inGettingLocation)
-            val isPermissionFineLocation = ActivityCompat.checkSelfPermission(
-                context, Manifest.permission.ACCESS_FINE_LOCATION
-            )
-            val isPermissionCoarseLocation = ActivityCompat.checkSelfPermission(
-                context, Manifest.permission.ACCESS_COARSE_LOCATION
-            )
-
-            if (isPermissionFineLocation != PackageManager.PERMISSION_GRANTED &&
-                isPermissionCoarseLocation != PackageManager.PERMISSION_GRANTED
-            ) {
-                unlockViewItems()
-                requestLocationPermission()
-            } else {
-                val locationManager: LocationManager =
-                    context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-                if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                    fusedLocationClient.requestLocationUpdates(
-                        locationRequest,
-                        locationCallback,
-                        Looper.getMainLooper()
-                    )
-                } else {
-                    unlockViewItems()
-                    statusField.text = getString(R.string.pleaseCheckIfGPSIsOn)
-                }
-            }
-        }
-    }
-
-    private fun requestLocationPermission() {
-        activity?.let { activity ->
-            if (ActivityCompat.shouldShowRequestPermissionRationale(
-                    activity,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                )
-            ) {
-                statusField.text =
-                    getString(R.string.checkAppLvlPermission).format(getString(R.string.app_name))
-            } else {
-                ActivityCompat.requestPermissions(
-                    activity,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    REQUEST_PERMISSION
-                )
-            }
-        }
-    }
-}
-
- */
