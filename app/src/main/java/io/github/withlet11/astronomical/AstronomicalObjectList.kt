@@ -1,7 +1,7 @@
 /**
  * AstronomicalObjectList.kt
  *
- * Copyright 2020 Yasuhiro Yamakawa <withlet11@gmail.com>
+ * Copyright 2020-2025 Yasuhiro Yamakawa <withlet11@gmail.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -32,16 +32,20 @@ import java.util.ArrayList
 abstract class AstronomicalObjectList(private val filename: String) {
     protected var list = ArrayList<AstronomicalObject>()
 
+    /*
     fun load(context: Context): ArrayList<AstronomicalObject> {
         val assetManager: AssetManager  = context.resources.assets
-        var bufferReader: BufferedReader?  = null
 
         try {
+            var bufferReader: BufferedReader?  = null
             val inputStream: InputStream = assetManager.open(filename)
             val inputStreamReader = InputStreamReader(inputStream)
             bufferReader = BufferedReader(inputStreamReader)
-            var line = bufferReader.readLine() // skip first line
-            while (bufferReader.readLine().let { line = it; it != null }) {
+            bufferReader.readLine() // skip first line
+            var line: String?
+            while (true) {
+                line = bufferReader.readLine()
+                if (line == null) break
                 getObject(line.split('\t'))
             }
         } catch (e: IOException) {
@@ -49,15 +53,45 @@ abstract class AstronomicalObjectList(private val filename: String) {
             e.printStackTrace()
         } finally {
             try {
-                bufferReader!!.close()
+                bufferReader?.close()
             } catch (e: IOException) {
-                println("Closing fileReader Error!")
+//                println("Closing fileReader Error!")
                 e.printStackTrace()
             }
         }
 
         return list
     }
+     */
+    fun load(context: Context): ArrayList<AstronomicalObject> {
+        val assetManager: AssetManager = context.resources.assets
+
+        try {
+            // Use 'use' to ensure InputStream is closed
+            assetManager.open(filename).use { inputStream: InputStream ->
+                // Use 'use' to ensure InputStreamReader is closed
+                InputStreamReader(inputStream).use { inputStreamReader ->
+                    // Use 'use' to ensure BufferedReader is closed
+                    BufferedReader(inputStreamReader).use { bufferReader ->
+                        bufferReader.readLine() // skip first line
+                        var line: String?
+                        while (true) {
+                            line = bufferReader.readLine()
+                            if (line == null) break
+                            getObject(line.split('\t'))
+                        }
+                    }
+                }
+            }
+        } catch (e: IOException) {
+            println("Reading CSV Error!")
+            e.printStackTrace()
+        }
+        // No finally block needed for closing resources, 'use' handles it
+
+        return list
+    }
+
 
     abstract fun getObject(line: List<String>)
 }

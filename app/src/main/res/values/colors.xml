@@ -2,7 +2,7 @@
 <resources>
     <!-- Theme & Accent-->
     <color name="colorPrimary">#1234EE</color>
-    <color name="colorPrimaryDark">#082080</color>
+    <color name="colorPrimarySurface">#082080</color>
     <color name="colorAccent">#1090FF</color>
     <color name="colorPlainText">#FFFFFF</color>
 

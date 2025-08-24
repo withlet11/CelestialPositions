@@ -7,6 +7,7 @@ plugins {
     id("com.google.android.gms.oss-licenses-plugin")
     id("kotlin-android")
     id("kotlin-kapt")
+    // id("com.google.devtools.ksp") // <--- ADD THIS LINE
     kotlin("plugin.serialization") version "2.1.0"
 }
 
@@ -31,14 +32,13 @@ android {
         }
     }
 
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "io.github.withlet11.celestialpositions"
         minSdk = 26
-        targetSdk = 35
-        versionCode = 4
-        versionName = "1.3"
+        versionCode = 5
+        versionName = "2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -52,32 +52,28 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "21"
     }
+    //
 
     buildFeatures {
         viewBinding = true
         compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.2"
+        buildConfig = true
     }
 
     namespace = "io.github.withlet11.celestialpositions"
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 }
 
 dependencies {
-    val kotlin_version: String by project
-
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation(libs.kotlin.stdlib)
     implementation(libs.androidx.core.ktx)
@@ -97,7 +93,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
 
     // Compose
-    val composeBom = platform("androidx.compose:compose-bom:2024.12.01")
+    val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
     androidTestImplementation(composeBom)
 

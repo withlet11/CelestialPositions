@@ -42,8 +42,8 @@ class MainActivity : ComponentActivity() {
     private val licensesStateFlow = _licensesStateFlow.asStateFlow()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
 
         val location = loadPreviousPosition()
         val messierList = MessierObjectList().load(this)

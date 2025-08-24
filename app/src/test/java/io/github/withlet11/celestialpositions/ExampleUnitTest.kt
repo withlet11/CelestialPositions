@@ -1,7 +1,7 @@
 package io.github.withlet11.celestialpositions
 
 import io.github.withlet11.astronomical.AstronomicalTimes
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 import org.junit.Assert.*
 import java.time.ZoneId
@@ -14,7 +14,7 @@ import kotlin.math.abs
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class ExampleUnitTest {
-    @Test
+    @org.junit.jupiter.api.Test
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
     }
@@ -27,14 +27,14 @@ class ExampleUnitTest {
         assert(abs(time.gmst.toNanos() - getNano(6, 40, 29234)) < 1500000000)
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     fun gmst_isCorrect2() {
         val time = AstronomicalTimes(ZonedDateTime.of(2020, 2, 6, 14, 10, 9, 0, ZoneId.of("UTC")))
         println(time.gmst.toString())
         assert(abs(time.gmst.toNanos() - getNano(23, 14, 53886)) < 1500000000)
     }
 
-    @Test
+    @org.junit.jupiter.api.Test
     fun gmst_isCorrect3() {
         val time = AstronomicalTimes(ZonedDateTime.of(2020, 6, 12, 6, 59, 59, 0, ZoneId.of("UTC")))
         println(time.gmst.toString())
