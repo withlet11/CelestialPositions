@@ -43,7 +43,6 @@ androidx-runtime = { module = "androidx.compose.runtime:runtime" }
 androidx-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
 androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
-junit = { module = "junit:junit", version.ref = "junit" }
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitJupiterApi" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitJupiterEngine" }
 junit-jupiter-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junitJupiterParams" }
@@ -56,6 +55,4 @@ play-services-location = { module = "com.google.android.gms:play-services-locati
 play-services-oss-licenses = { module = "com.google.android.gms:play-services-oss-licenses", version.ref = "playServicesOssLicenses" }
 
 [plugins]
-org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
