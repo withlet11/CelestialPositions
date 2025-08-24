@@ -37,8 +37,9 @@ android {
 
     defaultConfig {
         applicationId = "io.github.withlet11.celestialpositions"
+        targetSdk = 35
         minSdk = 26
-        versionCode = 5
+        versionCode = 6
         versionName = "2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
