@@ -73,14 +73,14 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun loadPreviousPosition(): Pair<Double, Double> {
-        val previous = getSharedPreferences("observation_position", Context.MODE_PRIVATE)
+        val previous = getSharedPreferences("observation_position", MODE_PRIVATE)
         var latitude: Double
         var longitude: Double
 
         try {
             latitude = previous.getFloat("latitude", 0f).toDouble()
             longitude = previous.getFloat("longitude", 0f).toDouble()
-        } catch (e: ClassCastException) {
+        } catch (_: ClassCastException) {
             latitude = 0.0
             longitude = 0.0
         } finally {
