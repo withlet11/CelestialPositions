@@ -96,6 +96,7 @@ dependencies {
 
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.material.icons.extended.android)
 
     // Compose
     val composeBom = platform(libs.androidx.compose.bom)
