@@ -39,7 +39,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -50,6 +49,8 @@ import kotlinx.coroutines.delay
 import java.time.Duration
 import java.time.ZonedDateTime
 import kotlin.math.round
+import androidx.compose.ui.res.stringResource
+import kotlin.time.Duration.Companion.milliseconds
 
 
 data class TableValues(val name: String, val position: SphericalCoordinate, val details: String)
@@ -91,10 +92,8 @@ fun ObjectDataRow(
     longitude: Double,
     openDetails: (String, ArrayList<TableValues>) -> Unit
 ) {
-    val context = LocalContext.current
-
-    val unsignedThreeDigit = context.getString(R.string.unsignedThreeDigit)
-    val signedThreeDigit = context.getString(R.string.signedThreeDigit)
+    val unsignedThreeDigit = stringResource(R.string.unsignedThreeDigit)
+    val signedThreeDigit = stringResource(R.string.signedThreeDigit)
 
     var time by remember {
         mutableStateOf(AstronomicalTimes(ZonedDateTime.now()))
@@ -102,7 +101,7 @@ fun ObjectDataRow(
 
     LaunchedEffect(Unit) {
         while (true) {
-            delay(1000)
+            delay(1000.milliseconds)
             time = AstronomicalTimes(ZonedDateTime.now())
         }
     }

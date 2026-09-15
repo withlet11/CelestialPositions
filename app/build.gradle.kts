@@ -1,3 +1,4 @@
+import com.android.build.api.dsl.ApplicationExtension
 import org.gradle.kotlin.dsl.androidTestImplementation
 import java.util.Properties
 import java.io.FileInputStream
@@ -23,7 +24,7 @@ val keystoreProperties = Properties()
 // Load your keystore.properties file into the keystoreProperties object.
 keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 
-android {
+configure<ApplicationExtension> {
     signingConfigs {
         create("config") {
             keyAlias = keystoreProperties["keyAlias"] as String
@@ -37,10 +38,10 @@ android {
 
     defaultConfig {
         applicationId = "io.github.withlet11.celestialpositions"
-        targetSdk = 36
+        targetSdk = 37
         minSdk = 26
-        versionCode = 6
-        versionName = "2.0"
+        versionCode = 7
+        versionName = "2.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -52,11 +53,6 @@ android {
             signingConfig = signingConfigs.getByName("config")
         }
     }
-
-    kotlinOptions {
-        jvmTarget = "21"
-    }
-    //
 
     buildFeatures {
         viewBinding = true
@@ -101,7 +97,6 @@ dependencies {
     // Compose
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
-    androidTestImplementation(composeBom)
 
     implementation(libs.androidx.runtime)
     implementation(libs.androidx.ui)
@@ -111,8 +106,5 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.androidx.ui.tooling)
-
-    androidTestImplementation(libs.junit.jupiter.api)
-    testRuntimeOnly(libs.junit.jupiter.engine)
-    testImplementation(libs.junit.jupiter.params)
+    testImplementation(kotlin("test"))
 }

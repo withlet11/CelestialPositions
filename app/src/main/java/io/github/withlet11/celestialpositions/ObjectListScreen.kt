@@ -53,6 +53,7 @@ import io.github.withlet11.astronomical.AstronomicalObject
 import io.github.withlet11.astronomical.AstronomicalTimes
 import kotlinx.coroutines.delay
 import java.time.ZonedDateTime
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun ObjectListScreen(
@@ -68,7 +69,7 @@ fun ObjectListScreen(
 
     LaunchedEffect(Unit) {
         while (true) {
-            delay(1000)
+            delay(1000.milliseconds)
             time = AstronomicalTimes(ZonedDateTime.now())
         }
     }

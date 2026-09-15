@@ -48,7 +48,7 @@ fun OSSLicenseListScreen(
 ) {
     val licensesState by licensesStateFlow.collectAsState()
     LazyColumn(modifier = modifier.padding(4.dp)) {
-        items(licensesState) {
+        items(licensesState.licenseList) {
             Column(modifier = Modifier.clickable {
                 navController.navigate(
                     MainNavigation.OssLicenseDetails(

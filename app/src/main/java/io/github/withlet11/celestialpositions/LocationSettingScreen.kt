@@ -88,7 +88,7 @@ fun LocationSettingScreen(
 ) {
     var latitudeString by remember { mutableStateOf("%+f".format(latitude.doubleValue)) }
     var longitudeString by remember { mutableStateOf("%+f".format(longitude.doubleValue)) }
-    var statusMessage by remember { mutableStateOf("") }
+    var statusMessageResId by remember { mutableStateOf<Int?>(null) }
     var isLocationFieldEnabled by remember { mutableStateOf(true) }
     var isModifyButtonEnabled by remember { mutableStateOf(true) }
     var isLatitudeFieldValid by remember { mutableStateOf(true) }
@@ -191,8 +191,8 @@ fun LocationSettingScreen(
                     var value = text.replace(',', '.').toDoubleOrNull()
                     value?.let { if (it > 90.0 || it < -90.0) value = null }
                     isLatitudeFieldValid = value != null
-                    statusMessage =
-                        if (!isLatitudeFieldValid || !isLongitudeFieldValid) context.getString(R.string.invalidValue) else ""
+                    statusMessageResId =
+                        if (!isLatitudeFieldValid || !isLongitudeFieldValid) R.string.invalidValue else null
                     isModifyButtonEnabled = isLatitudeFieldValid && isLongitudeFieldValid
                     latitudeString = text
                 },
@@ -214,8 +214,8 @@ fun LocationSettingScreen(
                     var value = text.replace(',', '.').toDoubleOrNull()
                     value?.let { if (it > 90.0 || it < -90.0) value = null }
                     isLongitudeFieldValid = value != null
-                    statusMessage =
-                        if (!isLatitudeFieldValid || !isLongitudeFieldValid) context.getString(R.string.invalidValue) else ""
+                    statusMessageResId =
+                        if (!isLatitudeFieldValid || !isLongitudeFieldValid) R.string.invalidValue else null
                     isModifyButtonEnabled = isLatitudeFieldValid && isLongitudeFieldValid
                     longitudeString = text
                 },
@@ -229,7 +229,7 @@ fun LocationSettingScreen(
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = statusMessage,
+                text = statusMessageResId?.let { stringResource(it) } ?: "",
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -238,7 +238,7 @@ fun LocationSettingScreen(
 
             OutlinedButton(
                 onClick = {
-                    statusMessage = context.getString(R.string.inGettingLocation)
+                    statusMessageResId = R.string.inGettingLocation
                     startGPS(
                         context = context,
                         lockViewItems = { isLocationFieldEnabled = false },
@@ -251,7 +251,7 @@ fun LocationSettingScreen(
 
                                 latitudeString = "%+f".format(location?.latitude ?: 0.0)
                                 longitudeString = "%+f".format(location?.longitude ?: 0.0)
-                                statusMessage = context.getString(R.string.locationDataRetrieved)
+                                statusMessageResId = R.string.locationDataRetrieved
                                 isLatitudeFieldValid = true
                                 isLongitudeFieldValid = true
 
@@ -292,11 +292,13 @@ fun LocationSettingScreen(
             }
         }
         if (shouldShowPermissionRationale) {
+            val messageText = stringResource(R.string.pleaseAuthorizeLocationPermissions)
+            val actionLabelText = stringResource(R.string.approve)
             LaunchedEffect(Unit) {
                 scope.launch {
                     val userAction = snackbarHostState.showSnackbar(
-                        message = context.getString(R.string.pleaseAuthorizeLocationPermissions),
-                        actionLabel = context.getString(R.string.approve),
+                        message = messageText,
+                        actionLabel = actionLabelText,
                         duration = SnackbarDuration.Indefinite,
                         withDismissAction = true
                     )

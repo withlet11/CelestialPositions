@@ -10,8 +10,7 @@ import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-data class OssLicenseList(val licenseList: List<LibraryLicense>) :
-    List<LibraryLicense> by licenseList {
+data class OssLicenseList(val licenseList: List<LibraryLicense>) {
     companion object {
         suspend fun create(context: Context): OssLicenseList {
             val licenses = loadLibraries(context).map {

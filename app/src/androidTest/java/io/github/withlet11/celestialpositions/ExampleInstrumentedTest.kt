@@ -1,8 +1,8 @@
 package io.github.withlet11.celestialpositions
 
 import androidx.test.platform.app.InstrumentationRegistry
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.Assertions.assertEquals
+import junit.framework.TestCase.assertEquals
+import org.junit.Test
 
 /**
  * Instrumented test, which will execute on an Android device.
