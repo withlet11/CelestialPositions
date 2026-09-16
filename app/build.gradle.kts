@@ -40,8 +40,8 @@ configure<ApplicationExtension> {
         applicationId = "io.github.withlet11.celestialpositions"
         targetSdk = 37
         minSdk = 26
-        versionCode = 7
-        versionName = "2.1"
+        versionCode = 8
+        versionName = "2.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
