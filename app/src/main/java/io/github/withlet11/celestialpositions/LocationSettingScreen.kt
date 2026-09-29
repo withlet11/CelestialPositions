@@ -32,6 +32,7 @@ import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -58,6 +59,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -181,114 +183,123 @@ fun LocationSettingScreen(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         modifier = Modifier.padding(12.dp)
     ) { contentPadding ->
-        Column(modifier = Modifier.padding(contentPadding)) {
-            TextField(
-                value = latitudeString,
-                label = { Text(stringResource(R.string.latitude)) },
-                enabled = isLocationFieldEnabled,
-                colors = if (isLatitudeFieldValid) validValueColor else invalidValueColor,
-                onValueChange = { text ->
-                    var value = text.replace(',', '.').toDoubleOrNull()
-                    value?.let { if (it > 90.0 || it < -90.0) value = null }
-                    isLatitudeFieldValid = value != null
-                    statusMessageResId =
-                        if (!isLatitudeFieldValid || !isLongitudeFieldValid) R.string.invalidValue else null
-                    isModifyButtonEnabled = isLatitudeFieldValid && isLongitudeFieldValid
-                    latitudeString = text
-                },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                placeholder = {
-                    Text(text = "%+.4f".format(23.4567), color = Color.Gray)
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(contentPadding),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(modifier = Modifier.fillMaxWidth(0.8f)) {
+                TextField(
+                    value = latitudeString,
+                    label = { Text(stringResource(R.string.latitude)) },
+                    enabled = isLocationFieldEnabled,
+                    colors = if (isLatitudeFieldValid) validValueColor else invalidValueColor,
+                    onValueChange = { text ->
+                        var value = text.replace(',', '.').toDoubleOrNull()
+                        value?.let { if (it > 90.0 || it < -90.0) value = null }
+                        isLatitudeFieldValid = value != null
+                        statusMessageResId =
+                            if (!isLatitudeFieldValid || !isLongitudeFieldValid) R.string.invalidValue else null
+                        isModifyButtonEnabled = isLatitudeFieldValid && isLongitudeFieldValid
+                        latitudeString = text
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    placeholder = {
+                        Text(text = "%+.4f".format(23.4567), color = Color.Gray)
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-            Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(4.dp))
 
-            TextField(
-                value = longitudeString,
-                label = { Text(stringResource(R.string.longitude)) },
-                enabled = isLocationFieldEnabled,
-                colors = if (isLongitudeFieldValid) validValueColor else invalidValueColor,
-                onValueChange = { text ->
-                    var value = text.replace(',', '.').toDoubleOrNull()
-                    value?.let { if (it > 90.0 || it < -90.0) value = null }
-                    isLongitudeFieldValid = value != null
-                    statusMessageResId =
-                        if (!isLatitudeFieldValid || !isLongitudeFieldValid) R.string.invalidValue else null
-                    isModifyButtonEnabled = isLatitudeFieldValid && isLongitudeFieldValid
-                    longitudeString = text
-                },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                placeholder = {
-                    Text(text = "%+.3f".format(123.456), color = Color.Gray)
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
+                TextField(
+                    value = longitudeString,
+                    label = { Text(stringResource(R.string.longitude)) },
+                    enabled = isLocationFieldEnabled,
+                    colors = if (isLongitudeFieldValid) validValueColor else invalidValueColor,
+                    onValueChange = { text ->
+                        var value = text.replace(',', '.').toDoubleOrNull()
+                        value?.let { if (it > 90.0 || it < -90.0) value = null }
+                        isLongitudeFieldValid = value != null
+                        statusMessageResId =
+                            if (!isLatitudeFieldValid || !isLongitudeFieldValid) R.string.invalidValue else null
+                        isModifyButtonEnabled = isLatitudeFieldValid && isLongitudeFieldValid
+                        longitudeString = text
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    placeholder = {
+                        Text(text = "%+.3f".format(123.456), color = Color.Gray)
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-            Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(4.dp))
 
-            Text(
-                text = statusMessageResId?.let { stringResource(it) } ?: "",
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier.fillMaxWidth()
-            )
+                Text(
+                    text = statusMessageResId?.let { stringResource(it) } ?: "",
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.fillMaxWidth()
+                )
 
-            Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-            OutlinedButton(
-                onClick = {
-                    statusMessageResId = R.string.inGettingLocation
-                    startGPS(
-                        context = context,
-                        lockViewItems = { isLocationFieldEnabled = false },
-                        unlockViewItems = { isLocationFieldEnabled = true },
-                        fusedLocationClient = fusedLocationClient,
-                        locationRequest = locationRequest,
-                        locationCallback = object : LocationCallback() {
-                            override fun onLocationResult(locationResult: LocationResult) {
-                                val location = locationResult.lastLocation
+                OutlinedButton(
+                    onClick = {
+                        statusMessageResId = R.string.inGettingLocation
+                        startGPS(
+                            context = context,
+                            lockViewItems = { isLocationFieldEnabled = false },
+                            unlockViewItems = { isLocationFieldEnabled = true },
+                            fusedLocationClient = fusedLocationClient,
+                            locationRequest = locationRequest,
+                            locationCallback = object : LocationCallback() {
+                                override fun onLocationResult(locationResult: LocationResult) {
+                                    val location = locationResult.lastLocation
 
-                                latitudeString = "%+f".format(location?.latitude ?: 0.0)
-                                longitudeString = "%+f".format(location?.longitude ?: 0.0)
-                                statusMessageResId = R.string.locationDataRetrieved
-                                isLatitudeFieldValid = true
-                                isLongitudeFieldValid = true
+                                    latitudeString = "%+f".format(location?.latitude ?: 0.0)
+                                    longitudeString = "%+f".format(location?.longitude ?: 0.0)
+                                    statusMessageResId = R.string.locationDataRetrieved
+                                    isLatitudeFieldValid = true
+                                    isLongitudeFieldValid = true
 
-                                fusedLocationClient.removeLocationUpdates(this)
+                                    fusedLocationClient.removeLocationUpdates(this)
+                                }
+
                             }
+                        )
+                    },
+                    enabled = areLocationPermissionsGranted,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(stringResource(R.string.gps))
+                }
 
-                        }
-                    )
-                },
-                enabled = areLocationPermissionsGranted,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(stringResource(R.string.gps))
-            }
+                Spacer(modifier = Modifier.height(8.dp))
 
-            Spacer(modifier = Modifier.height(8.dp))
+                Button(
+                    onClick = {
+                        latitude.doubleValue =
+                            latitudeString.replace(',', '.').toDoubleOrNull()
+                                ?: latitude.doubleValue
+                        longitude.doubleValue =
+                            longitudeString.replace(',', '.').toDoubleOrNull()
+                                ?: longitude.doubleValue
 
-            Button(
-                onClick = {
-                    latitude.doubleValue =
-                        latitudeString.replace(',', '.').toDoubleOrNull() ?: latitude.doubleValue
-                    longitude.doubleValue =
-                        longitudeString.replace(',', '.').toDoubleOrNull() ?: longitude.doubleValue
-
-                    context.getSharedPreferences("observation_position", Context.MODE_PRIVATE)
-                        ?.edit()
-                        ?.run {
-                            putFloat("latitude", latitude.doubleValue.toFloat())
-                            putFloat("longitude", longitude.doubleValue.toFloat())
-                            commit()
-                        }
-                    navController.popBackStack()
-                },
-                enabled = isModifyButtonEnabled,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(stringResource(R.string.modify))
+                        context.getSharedPreferences("observation_position", Context.MODE_PRIVATE)
+                            ?.edit()
+                            ?.run {
+                                putFloat("latitude", latitude.doubleValue.toFloat())
+                                putFloat("longitude", longitude.doubleValue.toFloat())
+                                commit()
+                            }
+                        navController.popBackStack()
+                    },
+                    enabled = isModifyButtonEnabled,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(stringResource(R.string.modify))
+                }
             }
         }
         if (shouldShowPermissionRationale) {

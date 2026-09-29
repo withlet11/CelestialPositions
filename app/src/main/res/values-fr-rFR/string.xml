@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="localTimeLabel">Heure loc : </string>
+    <string name="utcLabel">UTC : </string>
+    <string name="altitude">Alt.</string>
+    <string name="azimuth">Az.</string>
+    <string name="commonName">Nom</string>
+    <string name="hourAngle">A. hor.</string>
+    <string name="declination">Déc.</string>
+    <string name="longitude">Longitude : </string>
+    <string name="latitude">Latitude : </string>
+    <string name="stars">Étoiles</string>
+    <string name="messier_objects">Objets de Messier</string>
+    <string name="inGettingLocation">Obtention des données de localisation…</string>
+    <string name="locationDataRetrieved">Données de localisation obtenues.</string>
+    <string name="invalidValue">Valeur non valide.</string>
+    <string name="pleaseCheckIfGPSIsOn">Veuillez vérifier que le GPS est activé.</string>
+    <string name="checkAppLvlPermission">Veuillez vérifier les autorisations de l’application %s pour accéder à la localisation.</string>
+    <string name="locationSettings">Paramètres du site d’observation</string>
+    <string name="app_license">Copyright 2020-2026 Yasuhiro Yamakawa &lt;withlet11@gmail.com&gt;\n\n
+La présente licence accorde gratuitement à toute personne obtenant une copie de ce logiciel et des fichiers de documentation associés (le « Logiciel ») l’autorisation d’utiliser, copier, modifier, fusionner, publier, distribuer, sous-licencier et/ou vendre le Logiciel sans restriction, ainsi que d’autoriser les personnes auxquelles le Logiciel est fourni à faire de même, sous réserve des conditions suivantes :\n\n
+La présente mention de copyright et la présente autorisation doivent être incluses dans toutes les copies ou parties substantielles du Logiciel.\n\n
+LE LOGICIEL EST FOURNI « EN L’ÉTAT », SANS GARANTIE D’AUCUNE SORTE, EXPRESSE OU IMPLICITE, Y COMPRIS, MAIS SANS S’Y LIMITER, LES GARANTIES DE QUALITÉ MARCHANDE, D’ADÉQUATION À UN USAGE PARTICULIER ET D’ABSENCE DE CONTREFAÇON. EN AUCUN CAS LES AUTEURS OU LES DÉTENTEURS DU COPYRIGHT NE POURRONT ÊTRE TENUS RESPONSABLES DE TOUTE RÉCLAMATION, DE TOUT DOMMAGE OU DE TOUTE AUTRE RESPONSABILITÉ, QUE CE SOIT DANS LE CADRE D’UNE ACTION CONTRACTUELLE, DÉLICTUELLE OU AUTRE, DÉCOULANT DU LOGICIEL OU DE SON UTILISATION OU DE TOUTE AUTRE OPÉRATION EFFECTUÉE AVEC CELUI-CI.</string>
+    <string name="license">Licence</string>
+    <string name="opensource_licenses">Licences open source</string>
+    <string name="open_cluster">AO</string>
+    <string name="globular_cluster">AG</string>
+    <string name="diffuse_nebula">ND</string>
+    <string name="planetary_nebula">NP</string>
+    <string name="supernova_remnant">RS</string>
+    <string name="galaxy">GX</string>
+    <string name="modify">Modifier</string>
+    <string name="pleaseAuthorizeLocationPermissions">Veuillez autoriser l’accès à la localisation.</string>
+    <string name="approve">Autoriser</string>
+</resources>
